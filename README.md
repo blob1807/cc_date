@@ -121,7 +121,7 @@ python3 cc_date.py -a "!1234 ABC 123" "!4321 CBA 321"
 ```
 **Out**
 ```
-!!5555 CCC 444
+!5555 CCC 444
 ```
 <br>
 
@@ -167,15 +167,15 @@ Returns floor divided dates. <br> dates1 / date2 / ...
 
 **Windows**
 ```commandline
-cc_date.py -d "!1234 ABC 123" "!4321 CBA 321"
+cc_date.py -d "!1234 ABC 123" "!1234 ABC 123"
 ```
 **Linux**
 ```commandline
-python3 cc_date.py -d "!1234 ABC 123" "!4321 CBA 321"
+python3 cc_date.py -d "!1234 ABC 123" "1234 ABC 123"
 ```
 **Out**
 ```
-!0 AAA 0
+!0 AAA 1
 ```
 <br>
 

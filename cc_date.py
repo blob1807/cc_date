@@ -20,6 +20,10 @@ class cc_format:
     regex_greedy = re.compile(r'(\d*) *([a-z]+) *(\d*(?=\D|\Z))', re.IGNORECASE)
 
     class normalize:
+        """
+        Docstring to be implemented\n
+        -Blob
+         """
         @staticmethod
         def string(date: any) -> str:
             work = list(cc_format.regex_greedy.findall(date)[0])
@@ -185,6 +189,10 @@ class convert:
 
 # ================ Math Stuff ================
 class cc_math:
+    """
+    Docstring to be implemented\n
+    -Blob
+     """
     @staticmethod
     def add(dates: list[cc_date, ...] | tuple[cc_date, ...]) -> cc_date:
         """
@@ -241,7 +249,7 @@ class cc_math:
 def cli():
     """Used only for Command Line Tool"""
     if __name__ != '__main__':
-        raise Exception("For CLI use only. ")
+        raise Exception("For CLI use only.")
 
     import argparse
     from datetime import datetime
@@ -260,7 +268,7 @@ def cli():
     operation.add_argument('-C', '--calculate', choices=['radix', 'weights'],
                            help='Calculates the Radixes or Weights of given Date\\s')
 
-    parser.add_argument('dates', help='CC Date/s', nargs='+')
+    parser.add_argument('dates', help='CC Dates', nargs='+')
     # parser.print_help()
     args = parser.parse_args(['-f', '!1234 ABC 123', '!1234 ABC 123'])
     # print(args)
@@ -280,25 +288,25 @@ def cli():
               f'Digits:\n{cc_format.valid_digits_format}')
 
     elif args.convert == 'string':
-        print("Date\\s converted to String format:")
+        print("Dates converted to String format:")
         converted = [cc_date(date).string for date in args.dates]
         for v, c in zip(args.dates, converted):
             print(f'{v} -> {c}')
 
     elif args.convert == 'digits':
-        print("Date\\s converted to Digits format:")
+        print("Dates converted to Digits format:")
         converted = [cc_date(date).digits for date in args.dates]
         for v, c in zip(args.dates, converted):
             print(f'{v} -> {c}')
 
     elif args.convert == 'decimal':
-        print("Date\\s converted to Decimal format:")
+        print("Dates converted to Decimal format:")
         converted = [cc_date(date).decimal for date in args.dates]
         for v, c in zip(args.dates, converted):
             print(f'{v} -> {c}')
 
     elif args.convert == 'human':
-        print("Date\\s converted to Human format:")
+        print("Dates converted to Human format:")
         converted = [datetime.fromtimestamp(cc_date(date).decimal) for date in args.dates]
         for v, c in zip(args.dates, converted):
             print(f'{v} -> {c}')
