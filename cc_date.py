@@ -321,6 +321,5 @@ def cli():
 
 if __name__ == '__main__':
     import sys
-    print(cc_date('!1234 ABC 123').date)
-    # cli()
+    cli()
     sys.exit(0)
