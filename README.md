@@ -4,9 +4,8 @@
 
 
 <!-- TABLE OF CONTENTS -->
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
+<summary>Table of Contents</summary>
+<ol>
     <li><a href="#date-terminology">Date Terminology</a></li>
     <li>
         <a href="#cli-usage">CLI Usage</a>
@@ -27,13 +26,13 @@
             <li><a href="#exaples">Examples</a> </li>
         </ul>
     </li>
-  </ol>
-</details>
+</ol>
 
 
 
 <!-- DATE TERMINOLOGY -->
 ## Date Terminology
+
 * String   - !1234 ABC 123
 * Digits   - (1234, 0, 1, 2, 123)
 * Decimal  - 21688812123
@@ -47,30 +46,31 @@
 For dates with Spaces use.<br>
 This will be used throughout this README
 
-*Windows*
+**Windows**
 ```commandline
 cc_date.py -a "!1234 ABC 123" "!4321 CBA 321"
 ```
 
-*Linux*
+**Linux**
 ```commandline
 python3 cc_date.py -a "!1234 ABC 123" "!4321 CBA 321"
 ```
 
 For dates without Spaces use.
 
-*Windows*
+**Windows**
 ```commandline
 cc_date.py -a !1234ABC123 !4321CBA321
 ```
 
-*Linux*
+**Linux**
 ```commandline
 python3 cc_date.py -a !1234ABC123 !4321CBA321
 ```
 <br>
 
 ### Help
+
 Returns help
 
 **Windows**
@@ -97,7 +97,7 @@ options:
   -a, --add             Add 2 or more CC Dates
   -s, --sub             Sub 2 or more CC Dates
   -m, --multiple        Multiple 2 or more CC Dates
-  -d, --divide          Divide 2 or more CC Dates
+  -d, --divide          Floor Divide 2 or more CC Dates
   -f, --valid-formats   Prints all valid input formats
   -c {string,digits,decimal,human}, --convert {string,digits,decimal,human}
                         Convert from String, Digits & Decimal Dates to String,
@@ -108,6 +108,7 @@ options:
 <br>
 
 ### Add
+
 Returns added dates. <br> dates1 + date2 + ...
 
 **Windows**
@@ -125,6 +126,7 @@ python3 cc_date.py -a "!1234 ABC 123" "!4321 CBA 321"
 <br>
 
 ### Subtract
+
 Returns subtracted dates. <br> dates1 - date2 - ...
 
 **Windows**
@@ -142,6 +144,7 @@ python3 cc_date.py -s "!1234 ABC 123" "!4321 CBA 321"
 <br>
 
 ### Multiple
+
 Returns multiplied dates. <br> dates1 x date2 x ...
 
 **Windows**
@@ -159,6 +162,7 @@ python3 cc_date.py -m "!1234 ABC 123" "!4321 CBA 321"
 <br>
 
 ### Divide
+
 Returns floor divided dates. <br> dates1 / date2 / ...
 
 **Windows**
@@ -176,7 +180,9 @@ python3 cc_date.py -d "!1234 ABC 123" "!4321 CBA 321"
 <br>
 
 ### Convert
+
 Convert from string, digits & decimal dates to string, digits, decimal & human dates
+<br>Takes 1 or more dates
 
 **Windows**
 ```commandline
@@ -195,7 +201,9 @@ Date\s converted to Decimal format:
 <br>
 
 ### Calculate
+
 Returns either the radix or weights of given dates.
+<br>Takes 1 or more dates
 
 **Windows**
 ```commandline
@@ -214,6 +222,7 @@ Place value Radixes:
 <br>
 
 ### Valid Formats
+
 Returns all valid inputs. Separated by `|`.
 
 **Windows**
@@ -243,10 +252,12 @@ Digits:
 
 <!-- Library Usage -->
 ## Library Usage
+
 Coming Soon.<br>
-For now just look at the `cli()` func, docstrings & comments on how to use it.
+For now look at the docstrings & comments in the file on how to use it.
 
 ### Examples
+
 Get date in Decimal
 ```python
 from cc_date import cc_date
