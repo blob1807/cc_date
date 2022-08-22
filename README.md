@@ -23,7 +23,7 @@
     <li>
         <a href="#library-usage">Library Usage</a>
         <ul>
-            <li><a href="#exaples">Examples</a> </li>
+            <li><a href="#examples">Examples</a> </li>
         </ul>
     </li>
 </ol>
