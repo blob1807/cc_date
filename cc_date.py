@@ -14,7 +14,7 @@ class cc_format:
     valid_string_formats = '!1234 aAa 123 | !1234aAa123 \n1234 aAa 123 | 1234aAa123\n' \
                            '1234 A 123 | A 123 | 1234 A \n1234A123 | A123 | 1234A \n' \
                            '234123 | aAa'
-    valid_digits_format = '[0-inf, 0-26, 0-26, 0-26, ..., 0-999]'
+    valid_digits_format = '[0-inf, 0-26, 0-26, 0-26, 0-999]'
     cc_format = '!1234 AAA 123'
     regex = re.compile(r'!?\d+ ?[a-z]{3} ?\d{3}(?=\D|\Z)', re.IGNORECASE)
     regex_greedy = re.compile(r'(\d*) *([a-z]+) *(\d*(?=\D|\Z))', re.IGNORECASE)
@@ -24,6 +24,8 @@ class cc_format:
         Docstring to be implemented\n
         -Blob
          """
+        # Add eval check here?
+        # def evaluate(dates: list | tuple) -> list | tuple:
         @staticmethod
         def string(date: any) -> str:
             work = list(cc_format.regex_greedy.findall(date)[0])
@@ -49,14 +51,16 @@ class cc_date:
     Docstring to be implemented\n
     -Blob
      """
-    date: list | tuple | str | int  # Always convert to int
+    date: list | tuple | str | int  # Always converts to int
     radixes: list | tuple = dataclasses.field(default_factory=list)
     weights: list | tuple = dataclasses.field(default_factory=list)
 
     def __post_init__(self):
-        assert type(self.date) in (list, tuple, str, int), f'Date must be list, tuple, str or int'
-        assert type(self.weights) in (list, tuple), f'Weights must be list or tuple'
-        assert type(self.radixes) in (list, tuple), f'Radixes must be list or tuple'
+        assert self.date, f"Date, {repr(self.date)}, must not be empty"
+        assert type(self.date) in (list, tuple, str, int), f'Date, {repr(self.date)}, must be list, tuple, str or int'
+        assert type(self.weights) in (list, tuple), f'Weights, {repr(self.weights)}, must be list or tuple'
+        assert type(self.radixes) in (list, tuple), f'Radixes, {repr(self.radixes)}, must be list or tuple'
+        # Add eval check here?
 
         # Normalize & Convert to Digits Date
         if type(self.date) in (list, tuple):
@@ -82,7 +86,7 @@ class cc_date:
         :return: CC Date in Decimal format
         """
         assert type(self.date) is int, \
-            "cc_date.date shouldn't be modified after initialization. Must stay of an int."
+            "cc_date.date shouldn't be modified after initialization. Must stay an int."
         return self.date
 
     @property
@@ -91,7 +95,7 @@ class cc_date:
         :return: CC Date in Digits format
         """
         assert type(self.date) is int, \
-            "cc_date.date shouldn't be modified after initialization. Must stay of an int."
+            "cc_date.date shouldn't be modified after initialization. Must stay an int."
         return convert.decimal_to_digits(self.date)
 
     @property
@@ -100,7 +104,7 @@ class cc_date:
         :return: CC Date in String format
         """
         assert type(self.date) is int, \
-            "cc_date.date shouldn't be modified after initialization. Must stay of an int."
+            "cc_date.date shouldn't be modified after initialization. Must stay an int."
         return convert.decimal_to_string(self.date)
 
 
@@ -122,13 +126,9 @@ class calc:
     def weights(radixes: list | tuple) -> tuple:
         """
         :param radixes: Radixes of a date
-        :return:
+        :return: Weights of given Radixes
         """
-        work, acc = [1], 1
-        for _radix in radixes[1:][::-1]:
-            # Calc Weights / Place Values
-            work.append(acc := acc * _radix)
-        return tuple(work[::-1])
+        return radixes[1]*676000, 676000, 26000, 1000, 1
 
 
 # ============= Conversion Class =============
@@ -144,6 +144,7 @@ class convert:
         # NEEDS to be normalized with cc_format.normalize.digits() before passing to this func
         if weights is Ellipsis or not weights:
             weights = calc.weights(calc.radixes(date))
+        # Multiple each date by its weight & sum them up
         return sum(map(lambda weight, n: weight * n, weights, date))
 
     @staticmethod
@@ -187,7 +188,7 @@ class convert:
         return convert.digits_to_decimal(work, weights)
 
 
-# ================ Math Stuff ================
+# ================ Math Class ================
 class cc_math:
     """
     Docstring to be implemented\n
@@ -247,12 +248,11 @@ class cc_math:
 
 
 def cli():
-    """Used only for Command Line Tool"""
+    """Used only as Command Line Tool"""
     if __name__ != '__main__':
         raise Exception("For CLI use only.")
 
     import argparse
-    from datetime import datetime
     parser = argparse.ArgumentParser(description="For use with Ivycomb's Cosmic Critters date format.")
 
     operation = parser.add_mutually_exclusive_group(required=True)
@@ -263,15 +263,35 @@ def cli():
 
     operation.add_argument('-f', '--valid-formats', help='Prints all valid input formats', action='store_true')
 
-    operation.add_argument('-c', '--convert', choices=['string', 'digits', 'decimal', 'human'],
-                           help='Convert from String, Digits & Decimal Dates to String, Digits, Decimal or Human Dates')
+    operation.add_argument('-c', '--convert', choices=['string', 'digits', 'decimal'],
+                           help='Convert from String, Digits & Decimal Dates to String, Digits or Decimal Dates')
     operation.add_argument('-C', '--calculate', choices=['radix', 'weights'],
                            help='Calculates the Radixes or Weights of given Date\\s')
 
     parser.add_argument('dates', help='CC Dates', nargs='+')
     # parser.print_help()
-    args = parser.parse_args(['-f', '!1234 ABC 123', '!1234 ABC 123'])
-    # print(args)
+    inp = ['-a', "!1234 ABC 123", "!1234ABC123", '(1234, 0, 1, 2, 123)', '21688812123', '(1234, 0, 1, 2, 123)']
+    # args = parser.parse_args(inp)
+    args = parser.parse_args()
+
+    # Might move to cc_date class or cc_format.normalize class
+    for pos, date in enumerate(args.dates):
+        try:
+            assert date, f"Date, {repr(date)}, must not be empty"
+            # Semi safe eval.
+            date = eval(date, {'__builtins__': None})
+
+        except SyntaxError as e:
+            if not cc_format.regex.findall(date):
+                raise e
+
+        except TypeError:
+            raise Exception(f'{date} is not a date')
+
+        else:
+            if type(date) not in (int, list, tuple):
+                raise Exception(f'{date} is invalid date format')
+            args.dates[pos] = date
 
     if args.add:
         print(cc_math.add([cc_date(date) for date in args.dates]).string)
@@ -302,12 +322,6 @@ def cli():
     elif args.convert == 'decimal':
         print("Dates converted to Decimal format:")
         converted = [cc_date(date).decimal for date in args.dates]
-        for v, c in zip(args.dates, converted):
-            print(f'{v} -> {c}')
-
-    elif args.convert == 'human':
-        print("Dates converted to Human format:")
-        converted = [datetime.fromtimestamp(cc_date(date).decimal) for date in args.dates]
         for v, c in zip(args.dates, converted):
             print(f'{v} -> {c}')
 
