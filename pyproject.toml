@@ -2,7 +2,7 @@
 name = "cc date"
 version = "0.1.0"
 description = ""
-authors = ["blob"]
+authors = ["blob1807"]
 
 [tool.poetry.dependencies]
 python = "^3.10.6"
