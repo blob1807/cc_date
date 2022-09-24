@@ -15,19 +15,21 @@ class cc_format:
                            '1234 A 123 | A 123 | 1234 A \n1234A123 | A123 | 1234A \n' \
                            '234123 | aAa'
     valid_digits_format = '[0-inf, 0-26, 0-26, 0-26, 0-999]'
-    cc_format = '!1234 AAA 123'
+    cc_format = '!YYYY MMM DDD', '!1234 ABC 567'
     regex = re.compile(r'!?\d+ ?[a-z]{3} ?\d{3}(?=\D|\Z)', re.IGNORECASE)
     regex_greedy = re.compile(r'(\d*) *([a-z]+) *(\d*(?=\D|\Z))', re.IGNORECASE)
+
+    # Add eval check here?
+    # @staticmethod
+    # def evaluate(dates: list | tuple) -> list | tuple:
 
     class normalize:
         """
         Docstring to be implemented\n
         -Blob
          """
-        # Add eval check here?
-        # def evaluate(dates: list | tuple) -> list | tuple:
         @staticmethod
-        def string(date: any) -> str:
+        def string(date: str) -> str:
             work = list(cc_format.regex_greedy.findall(date)[0])
             while len(work[1]) < 3:
                 work[1] += 'A'
@@ -195,7 +197,7 @@ class cc_math:
     -Blob
      """
     @staticmethod
-    def add(dates: list[cc_date, ...] | tuple[cc_date, ...]) -> cc_date:
+    def add(dates: list | tuple[cc_date, ...]) -> cc_date:
         """
         Adds CC Dates
         :param dates: list or tuple of cc_date
@@ -208,7 +210,7 @@ class cc_math:
         return cc_date(ans)
 
     @staticmethod
-    def sub(dates: list[cc_date, ...] | tuple[cc_date, ...]) -> cc_date:
+    def sub(dates: list | tuple[cc_date, ...]) -> cc_date:
         """
         Subtracts CC Dates
         :param dates: list or tuple of cc_date
@@ -221,7 +223,7 @@ class cc_math:
         return cc_date(ans)
 
     @staticmethod
-    def mul(dates: list[cc_date, ...] | tuple[cc_date, ...]) -> cc_date:
+    def mul(dates: list | tuple[cc_date, ...]) -> cc_date:
         """
         Multiples CC Dates
         :param dates: list or tuple of cc_date
@@ -234,7 +236,7 @@ class cc_math:
         return cc_date(ans)
 
     @staticmethod
-    def div(dates: list[cc_date, ...] | tuple[cc_date, ...]) -> cc_date:
+    def div(dates: list | tuple[cc_date, ...]) -> cc_date:
         """
         Floor Divides CC Dates
         :param dates: list or tuple of cc_date
@@ -271,11 +273,10 @@ def cli():
     parser.add_argument('dates', help='CC Dates', nargs='+')
     # parser.print_help()
     inp = ['-c', 'string', "!1234 ABC 123", "!1234ABC123", '(1234, 0, 1, 2, 123)', '21688812123']
-    if len(sys.argv) <= 1:
-        args = parser.parse_args(inp)
-    else:
-        args = parser.parse_args()
+    # args = parser.parse_args(inp)
+    args = parser.parse_args()
 
+    # args.dates = cc_format.eval(args.dates)
     # Might move to cc_date class or cc_format.normalize class
     for pos, date in enumerate(args.dates):
         try:
