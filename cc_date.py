@@ -116,7 +116,7 @@ class calc:
     """
     @staticmethod
     def radixes(date: list | tuple) -> tuple:
-        """
+        """\t
         :param date: CC Date in Digits format
         :return: Radixes of given date
         """
@@ -124,7 +124,7 @@ class calc:
 
     @staticmethod
     def weights(radixes: list | tuple) -> tuple:
-        """
+        """\t
         :param radixes: Radixes of a date
         :return: Weights of given Radixes
         """
@@ -270,9 +270,11 @@ def cli():
 
     parser.add_argument('dates', help='CC Dates', nargs='+')
     # parser.print_help()
-    inp = ['-a', "!1234 ABC 123", "!1234ABC123", '(1234, 0, 1, 2, 123)', '21688812123', '(1234, 0, 1, 2, 123)']
-    # args = parser.parse_args(inp)
-    args = parser.parse_args()
+    inp = ['-c', 'string', "!1234 ABC 123", "!1234ABC123", '(1234, 0, 1, 2, 123)', '21688812123']
+    if len(sys.argv) <= 1:
+        args = parser.parse_args(inp)
+    else:
+        args = parser.parse_args()
 
     # Might move to cc_date class or cc_format.normalize class
     for pos, date in enumerate(args.dates):
@@ -307,35 +309,33 @@ def cli():
               f'String & Decimal:\n{cc_format.valid_string_formats}\n\n'
               f'Digits:\n{cc_format.valid_digits_format}')
 
-    elif args.convert == 'string':
-        print("Dates converted to String format:")
-        converted = [cc_date(date).string for date in args.dates]
-        for v, c in zip(args.dates, converted):
-            print(f'{v} -> {c}')
+    elif args.convert:
+        if args.convert == 'string':
+            print("Dates converted to String format:")
+            values = tuple(cc_date(date).string for date in args.dates)
 
-    elif args.convert == 'digits':
-        print("Dates converted to Digits format:")
-        converted = [cc_date(date).digits for date in args.dates]
-        for v, c in zip(args.dates, converted):
-            print(f'{v} -> {c}')
+        elif args.convert == 'digits':
+            print("Dates converted to Digits format:")
+            values = tuple(cc_date(date).digits for date in args.dates)
 
-    elif args.convert == 'decimal':
-        print("Dates converted to Decimal format:")
-        converted = [cc_date(date).decimal for date in args.dates]
-        for v, c in zip(args.dates, converted):
-            print(f'{v} -> {c}')
+        else:
+            print("Dates converted to Decimal format:")
+            values = tuple(cc_date(date).decimal for date in args.dates)
 
-    elif args.calculate == 'radix':
-        print("Place value Radixes:")
-        radixes = [cc_date(date).radixes for date in args.dates]
-        for v, r in zip(args.dates, radixes):
-            print(f'{v} -> {r}')
+        for date, value in zip(args.dates, values):
+            print(f'{date} -> {value}')
 
-    elif args.calculate == 'weights':
-        print("Place value Weights:")
-        weights = [cc_date(date).weights for date in args.dates]
-        for v, w in zip(args.dates, weights):
-            print(f'{v} -> {w}')
+    elif args.calculate:
+        if args.calculate == 'radix':
+            print("Place value Radixes:")
+            values = tuple(cc_date(date).radixes for date in args.dates)
+
+        else:
+            print("Place value Weights:")
+            values = tuple(cc_date(date).weights for date in args.dates)
+
+        for date, value in zip(args.dates, values):
+            print(f'{date} -> {value}')
 
     else:
         raise Exception("Do look at me. Argparse must of decide to go poof.")
