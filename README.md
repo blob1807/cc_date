@@ -185,7 +185,7 @@ python3 cc_date.py -d "!1234 ABC 123" "1234 ABC 123"
 
 <br>
 
-### Convert {#convert-cli}
+### Convert CLI
 
 Convert from string, digits & decimal dates to string, digits & decimal dates
 <br>Takes 1 or more dates
@@ -275,7 +275,7 @@ Digits:
 
 ### Calc
 
-### Convert {#convert-lib}
+### Convert Lib
 
 Coming Soon.<br>
 For now look at the docstrings & comments in the file on how to use it.
