@@ -267,18 +267,67 @@ Digits:
 <!-- Library Usage -->
 ## Library Usage
 
-### CC Format
-
 ### CC Date
+`cc_date(date: list | tuple | str | int,
+         radixes: list | tuple
+         weights: list | tuple)`  
+`date`: String, Digits or Decimal Date.  
+`radixes`: Array of Mixed Radix; Optional.  
+`weights`: Array of Weights; Optional.  
+
+Properties:  
+`.decimal` returns date as Decimal.  
+`.digits` returns date as Digits.  
+`.string` returns date as String.  
 
 ### CC Math
+`.cc_math`
+
+Functions:  
+`.add(dates: list | tuple[cc_date, ...])` adds cc dates, returns cc date  
+`.sub(dates: list | tuple[cc_date, ...])` subs cc dates, returns cc date  
+`.mul(dates: list | tuple[cc_date, ...])` multiplies cc dates, returns cc date  
+`.div(dates: list | tuple[cc_date, ...])` divides cc dates, returns cc date  
+
+
+### CC Format
+`.cc_format` Intended for internal use.
+
+Variables:  
+`.valid_string_formats` returns all valid string formats.  
+`.valid_digits_format` returns valid digits format.  
+`.cc_format` returns expected cc date format.  
+`.regex` returns a regex to find expected date.  
+`.regex_greedy` returns a regex to find valid dates & splits Year, Month & Day.
+
+Functions:  
+`.normalize.string(date: str)` used to normalize strings.  
+`.normalize.digits(date: list | tuple)` used to normalize arrays.
+
 
 ### Calc
+`.calc` Intended for internal use.
+
+Functions:  
+`.radixes(date: list | tuple)` returns tuple of the mixed radix of given date.  
+`.weights(radixes: list | tuple)` returns tuple of the weights of given radixes.  
+
 
 ### Convert Lib
+`.convert` Intended for internal use.
 
-Coming Soon.<br>
-For now look at the docstrings & comments in the file on how to use it.
+Functions:  
+`.digits_to_decimal(date: list | tuple, weights: list | tuple = ...)`
+converts digits to decimal, returns int.  
+`.decimal_to_digits(date: int)` converts decimal to digits, returns tuple.  
+
+`.digits_to_string(date: list | tuple)` converts digits to string, returns str.  
+`.string_to_digits(date: str)` converts string to digits, returns tuple.  
+
+`.decimal_to_string(date: int)` converts decimal to string, returns str.  
+`.string_to_decimal(date: str, weights: list | tuple = ...)`
+converts string to decimal, returns int.  
+
 
 ### Examples
 
@@ -295,8 +344,6 @@ print(cc_date.decimal)
 21688812123
 ```
 
-<br>
-
 Add dates.
 
 ```python
@@ -311,29 +358,6 @@ print(date_3.string)
 
 ```text
 !5555 CCC 444
-```
-
-<br>
-
-**CONVERSION TO OR FROM HUMAN ISN'T RECOMMENDED!!!**<br>
-Convert CC Date to Human Date.<br>
-Using Numpy's `datetime64` is recommended
-
-```python
-from cc_date import cc_date
-from datetime import datetime
-import numpy as np
-
-date = cc_date("!1234 ABC 123")
-print(datetime.fromtimestamp(date.decimal))
-# or
-print(np.array([date.decimal], dtype='datetime64[s]'))
-```
-
-```text
-2657-04-16 22:02:03
-or
-['2657-04-16T22:02:03']
 ```
 
 <!-- MARKDOWN LINKS & IMAGES -->
