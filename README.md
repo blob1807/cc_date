@@ -3,7 +3,7 @@
 # Cosmic Critter Date Format Handler <!-- omit in toc -->
 
 <!-- TABLE OF CONTENTS -->
-Table of Contents
+### Table of Contents
 - [Date Terminology](#date-terminology)
 - [CLI Usage](#cli-usage)
   - [Help](#help)
@@ -13,9 +13,11 @@ Table of Contents
   - [Divide](#divide)
   - [Convert](#convert-cli)
   - [Calculate](#calculate)
+  - [Normalize](#normalize-cli)
   - [Valid Formats](#valid-formats)
 - [Library Usage](#library-usage)
   - [CC Format](#cc-format)
+  - [Normalize](#normalize-lib)
   - [CC Date](#cc-date)
   - [CC Math](#cc-math)
   - [Calc](#calc)
@@ -36,24 +38,24 @@ For dates with Spaces use.<br>
 This will be used throughout this README
 
 **Windows**
-```commandline
+```
 cc_date.py -a "!1234 ABC 123" "!4321 CBA 321"
 ```
 
 **Linux**
-```commandline
+```
 python3 cc_date.py -a "!1234 ABC 123" "!4321 CBA 321"
 ```
 
 For dates without Spaces use.
 
 **Windows**
-```commandline
+```
 cc_date.py -a !1234ABC123 !4321CBA321
 ```
 
 **Linux**
-```commandline
+```
 python3 cc_date.py -a !1234ABC123 !4321CBA321
 ```
 
@@ -64,28 +66,29 @@ python3 cc_date.py -a !1234ABC123 !4321CBA321
 Returns help
 
 **Windows**
-```commandline
+```
 cc_date.py -h
 ```
 
 **Linux**
-```commandline
+```
 python3 cc_date.py -h
 ```
 
 **Out**
-```commandline
-usage: cc_date.py [-h]
-                  (-a | -s | -m | -d | -f | -c {string,digits,decimal,human} | -C {radix,weights})
+```
+usage: cc_date.py [-h] [--cleanout]
+                  (-a | -s | -m | -d | -f | -c {string,digits,decimal} | -C {radix,weights} | -n {string,digits})
                   dates [dates ...]
 
 For use with Ivycomb's Cosmic Critters date format.
 
 positional arguments:
-  dates                 CC Date/s
+  dates                 CC Dates
 
 options:
   -h, --help            show this help message and exit
+  --cleanout            Makes output clean for easier copying.
   -a, --add             Add 2 or more CC Dates
   -s, --sub             Sub 2 or more CC Dates
   -m, --multiple        Multiple 2 or more CC Dates
@@ -96,6 +99,25 @@ options:
                         Digits or Decimal Dates
   -C {radix,weights}, --calculate {radix,weights}
                         Calculates the Radixes or Weights of given Date\s
+  -n {string,digits}, --normalize {string,digits}
+                        Normalize strings & arrays to expected formats. Script
+                        does this automatically.
+```
+
+<br>
+
+### Clean Out
+
+Makes output clean for easier copying.
+
+**Windows**
+```
+cc_date.py --cleanout [arguments]
+```
+
+**Linux**
+```
+python3 cc_date.py --cleanout [arguments]
 ```
 
 <br>
@@ -105,17 +127,17 @@ options:
 Returns added dates. <br> dates1 + date2 + ...
 
 **Windows**
-```commandline
+```
 cc_date.py -a "!1234 ABC 123" "!4321 CBA 321"
 ```
 
 **Linux**
-```commandline
+```
 python3 cc_date.py -a "!1234 ABC 123" "!4321 CBA 321"
 ```
 
 **Out**
-```text
+```
 !5555 CCC 444
 ```
 
@@ -126,17 +148,17 @@ python3 cc_date.py -a "!1234 ABC 123" "!4321 CBA 321"
 Returns subtracted dates. <br> dates1 - date2 - ...
 
 **Windows**
-```commandline
+```
 cc_date.py -a "!1234 ABC 123" "!4321 CBA 321"
 ```
 
 **Linux**
-```commandline
+```
 python3 cc_date.py -s "!1234 ABC 123" "!4321 CBA 321"
 ```
 
 **Out**
-```text
+```
 !-3088 YAB 802
 ```
 
@@ -144,20 +166,20 @@ python3 cc_date.py -s "!1234 ABC 123" "!4321 CBA 321"
 
 ### Multiple
 
-Returns multiplied dates. <br> dates1 x date2 x ...
+Returns multiplied dates. <br> dates1 * date2 * ...
 
 **Windows**
-```commandline
+```
 cc_date.py -m "!1234 ABC 123" "!4321 CBA 321"
 ```
 
 **Linux**
-```commandline
+```
 python3 cc_date.py -m "!1234 ABC 123" "!4321 CBA 321"
 ```
 
 **Out**
-```text
+```
 !93719058033802 LAF 483
 ```
 
@@ -165,21 +187,21 @@ python3 cc_date.py -m "!1234 ABC 123" "!4321 CBA 321"
 
 ### Divide
 
-Returns floor divided dates. <br> dates1 / date2 / ...
+Returns floor divided dates. <br> dates1 // date2 // ...
 
 **Windows**
-```commandline
+```
 cc_date.py -d "!1234 ABC 123" "!1234 ABC 123"
 ```
 
 **Linux**
-```commandline
+```
 python3 cc_date.py -d "!1234 ABC 123" "1234 ABC 123"
 ```
 
 **Out**
 
-```text
+```
 !0 AAA 1
 ```
 
@@ -191,17 +213,17 @@ Convert from string, digits & decimal dates to string, digits & decimal dates
 <br>Takes 1 or more dates
 
 **Windows**
-```commandline
+```
 cc_date.py -c decimal "!1234 ABC 123" "!4321 CBA 321"
 ```
 
 **Linux**
-```commandline
+```
 python3 cc_date.py -c decimal "!1234 ABC 123" "!4321 CBA 321" "(1234, 0, 1, 2, 123)"
 ```
 
 **Out**
-```text
+```
 Dates converted to Decimal format:
 !1234 ABC 123 -> 21688812123
 !4321 CBA 321 -> 75947274321
@@ -216,20 +238,43 @@ Returns either the radix or weights of given dates.
 <br>Takes 1 or more dates
 
 **Windows**
-```commandline
+```
 cc_date.py -C radix "!1234 ABC 123" "!4321 CBA 321"
 ```
 
 **Linux**
-```commandline
+```
 python3 cc_date.py -C radix "!1234 ABC 123" "!4321 CBA 321"
 ```
 
 **Out**
-```text
+```
 Place value Radixes:
 !1234 ABC 123 -> (10000, 26, 26, 26, 1000)
 !4321 CBA 321 -> (10000, 26, 26, 26, 1000)
+```
+
+<br>
+
+### Normalize CLI
+
+Normalize strings & arrays to expected formats. Script does this automatically.
+
+**Windows**
+```
+cc_date.py -n string !14ABC13 '1234 A123'
+```
+
+**Linux**
+```
+python3 cc_date.py -n string !14ABC13 '1234 A123'
+```
+
+**Out**
+```
+String Dates Normalized:
+!14ABC13 -> !14 ABC 013
+1234 A123 -> !1234 AAA 123
 ```
 
 <br>
@@ -239,17 +284,17 @@ Place value Radixes:
 Returns all valid inputs. Separated by `|`.
 
 **Windows**
-```commandline
+```
 cc_date.py -f
 ```
 
 **Linux**
-```commandline
+```
 python3 cc_date.py -f
 ```
 
 **Out**
-```text
+```
 Valid Input Formats:
 Strings & Decimal:
 !1234 aAa 123 | !1234aAa123 
@@ -259,7 +304,8 @@ Strings & Decimal:
 234123 | aAa
 
 Digits:
-[0-inf, 0-26, 0-26, 0-26, 0-999]
+[0-inf, 0-25, 0-25, 0-25, 0-999]
+(0-inf, 0-25, 0-25, 0-25, 0-999)
 ```
 
 <br>
@@ -268,9 +314,9 @@ Digits:
 ## Library Usage
 
 ### CC Date
-`cc_date(date: list | tuple | str | int,
-         radixes: list | tuple
-         weights: list | tuple)`  
+`cc_date(date: list[int] | tuple[int, ...] | str | int,
+         radixes: list[int]
+         weights: list[int])`  
 `date`: String, Digits or Decimal Date.  
 `radixes`: Array of Mixed Radix; Optional.  
 `weights`: Array of Weights; Optional.  
@@ -281,57 +327,61 @@ Properties:
 `.string` returns date as String.  
 
 ### CC Math
-`.cc_math`
+`cc_math`
 
 Functions:  
-`.add(dates: list | tuple[cc_date, ...])` adds cc dates, returns cc date  
-`.sub(dates: list | tuple[cc_date, ...])` subs cc dates, returns cc date  
-`.mul(dates: list | tuple[cc_date, ...])` multiplies cc dates, returns cc date  
-`.div(dates: list | tuple[cc_date, ...])` divides cc dates, returns cc date  
+`.add(dates: list[cc_date])` adds cc dates, returns cc date  
+`.sub(dates: list[cc_date])` subs cc dates, returns cc date  
+`.mul(dates: list[cc_date])` multiplies cc dates, returns cc date  
+`.div(dates: list[cc_date])` divides cc dates, returns cc date  
 
 
 ### CC Format
-`.cc_format` Intended for internal use.
+`cc_format` Intended for internal use.
 
 Variables:  
-`.valid_string_formats` returns all valid string formats.  
-`.valid_digits_format` returns valid digits format.  
-`.cc_format` returns expected cc date format.  
-`.regex` returns a regex to find expected date.  
-`.regex_greedy` returns a regex to find valid dates & splits Year, Month & Day.
+`.valid_string_formats` all valid string formats.  
+`.valid_digits_format` all valid digits format.  
+`.cc_format` example cc date format.  
+`.regex` a regex to find expected date.  
+`.regex_greedy` a regex to find valid dates & splits Year, Month & Day.
+
+
+### Normalize Lib
+`normalize` Intended for internal use. Used to normalize.
 
 Functions:  
-`.normalize.string(date: str)` used to normalize strings.  
-`.normalize.digits(date: list | tuple)` used to normalize arrays.
+`.string(date: str)` used to normalize strings.  
+`.digits(date: list[int] | tuple[int, ...])` used to normalize lists.
 
 
 ### Calc
-`.calc` Intended for internal use.
+`calc` Intended for internal use.
 
 Functions:  
-`.radixes(date: list | tuple)` returns tuple of the mixed radix of given date.  
-`.weights(radixes: list | tuple)` returns tuple of the weights of given radixes.  
+`.radixes(date: list[int])` returns list of the mixed radix of given date.  
+`.weights(radixes: list[int])` returns list of the weights of given radixes.  
 
 
 ### Convert Lib
-`.convert` Intended for internal use.
+`convert` Intended for internal use.
 
 Functions:  
-`.digits_to_decimal(date: list | tuple, weights: list | tuple = ...)`
+`.digits_to_decimal(date: list[int], weights: list[int] = ...)`
 converts digits to decimal, returns int.  
-`.decimal_to_digits(date: int)` converts decimal to digits, returns tuple.  
+`.decimal_to_digits(date: int)` converts decimal to digits, returns list.  
 
-`.digits_to_string(date: list | tuple)` converts digits to string, returns str.  
-`.string_to_digits(date: str)` converts string to digits, returns tuple.  
+`.digits_to_string(date: list[int])` converts digits to string, returns str.  
+`.string_to_digits(date: str)` converts string to digits, returns list.  
 
 `.decimal_to_string(date: int)` converts decimal to string, returns str.  
-`.string_to_decimal(date: str, weights: list | tuple = ...)`
+`.string_to_decimal(date: str, weights: list[int] = ...)`
 converts string to decimal, returns int.  
 
 
 ### Examples
 
-Get date in Decimal
+Get String in Decimal date
 
 ```python
 from cc_date import cc_date
@@ -340,8 +390,20 @@ date = cc_date("!1234 ABC 123")
 print(cc_date.decimal)
 ```
 
-```text
+```
 21688812123
+```
+
+Convert Decimal to String date
+
+```python
+from cc_date import cc_date
+date = cc_date(21688812123)
+print(cc_date.string)
+```
+
+```
+!1234 ABC 123
 ```
 
 Add dates.
@@ -356,7 +418,7 @@ date_3 = cc_math.add([date_1, date_2])
 print(date_3.string)
 ```
 
-```text
+```
 !5555 CCC 444
 ```
 
