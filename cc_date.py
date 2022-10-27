@@ -26,8 +26,9 @@ class normalize:
     Docstring to be implemented\n
     -Blob
     """
+
     @staticmethod
-    def evaluate(dates: list[Any, ...]) -> list[Any, ...]:
+    def evaluate(dates: list[str | int | list | tuple]) -> list[str | int | list | tuple]:
         """\t
         :param dates: list of dates to be evaluated
         :return: evaluated list of dates
@@ -68,7 +69,7 @@ class normalize:
         if len(date) < 5:
             # Make date be at least 5 long
             date = date[::-1]
-            date.extend([0]*(5-len(date)))
+            date.extend([0] * (5 - len(date)))
             date = date[::-1]
 
         if len(date) > 5:
@@ -153,6 +154,7 @@ class calc:
     Docstring to be implemented\n
     -Blob
     """
+
     @staticmethod
     def radixes(date: list[int]) -> list[int, int, int, int, int]:
         """\t
@@ -167,7 +169,7 @@ class calc:
         :param radixes: Radixes of a date
         :return: Weights of given Radixes
         """
-        return [radixes[1]*676000, 676000, 26000, 1000, 1]
+        return [radixes[1] * 676000, 676000, 26000, 1000, 1]
 
 
 # ============= Conversion Class =============
@@ -176,6 +178,7 @@ class convert:
     Docstring to be implemented\n
     -Blob
     """
+
     @staticmethod
     def digits_to_decimal(date: list[int], weights: Optional[list[int]] = ...) -> int:
         # Mixed to Base10
@@ -230,6 +233,7 @@ class cc_math:
     Docstring to be implemented\n
     -Blob
      """
+
     @staticmethod
     def add(dates: list[cc_date]) -> cc_date:
         """
@@ -327,8 +331,8 @@ def cli():
         values = cc_math.div([cc_date(date) for date in args.dates]).string
 
     elif args.valid_formats:
-        values = f'Valid Input Formats:\n'\
-                 f'String & Decimal:\n{cc_format.valid_string_formats}\n\n'\
+        values = f'Valid Input Formats:\n' \
+                 f'String & Decimal:\n{cc_format.valid_string_formats}\n\n' \
                  f'Digits:\n{cc_format.valid_digits_format}'
 
     elif args.convert:
@@ -379,5 +383,6 @@ def cli():
 
 if __name__ == '__main__':
     import sys
+
     cli()
     sys.exit(0)
