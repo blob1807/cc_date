@@ -5,23 +5,25 @@
 <!-- TABLE OF CONTENTS -->
 ### Table of Contents
 - [Date Terminology](#date-terminology)
+- [Format](#format)
 - [CLI Usage](#cli-usage)
   - [Help](#help)
+  - [Clean Out](#clean-out)
   - [Add](#add)
   - [Subtract](#subtract)
   - [Multiple](#multiple)
   - [Divide](#divide)
-  - [Convert](#convert-cli)
+  - [Convert CLI](#convert-cli)
   - [Calculate](#calculate)
-  - [Normalize](#normalize-cli)
+  - [Normalize CLI](#normalize-cli)
   - [Valid Formats](#valid-formats)
 - [Library Usage](#library-usage)
-  - [CC Format](#cc-format)
-  - [Normalize](#normalize-lib)
   - [CC Date](#cc-date)
   - [CC Math](#cc-math)
+  - [CC Format](#cc-format)
+  - [Normalize Lib](#normalize-lib)
   - [Calc](#calc)
-  - [Convert](#convert-lib)
+  - [Convert Lib](#convert-lib)
   - [Examples](#examples)
 
 <!-- DATE TERMINOLOGY -->
@@ -30,6 +32,13 @@
 * String   - !1234 ABC 123
 * Digits   - (1234, 0, 1, 2, 123)
 * Decimal  - 21688812123
+
+## Format
+Cosmic Critters (CC) format is: `!YYYY MMM DDD`, `!0-inf A-Z*3 0-999`  
+*It's unknown what CC Dates represent. Year, Month & Day are placeholders*
+* String is in CC format
+* Digits is the letters converted their numbers in base26
+* Decimal is the date converted down to Days
 
 <!-- CLI Usage -->
 ## CLI Usage
