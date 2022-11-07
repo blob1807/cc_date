@@ -5,7 +5,7 @@ description = "For use with Ivycomb's Cosmic Critters date format."
 authors = ["blob1807"]
 
 [tool.poetry.dependencies]
-python = "^3.10.6"
+python = "^3.10.6, <3.11.*"
 
 [tool.poetry.dev-dependencies]
 
