@@ -69,4 +69,4 @@ sudo.txt
 testing.py
 timeings.py
 README.md.backup
-changelog.md
+changelog *.md
