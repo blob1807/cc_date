@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "cc_date"
-version = "0.2.0"
+version = "0.2.1"
 description = "For use with Ivycomb's Cosmic Critters date format."
 authors = ["blob1807"]
 
