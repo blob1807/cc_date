@@ -43,12 +43,14 @@ class normalize:
 
     @staticmethod
     def evaluate(dates: list[str | int | list | tuple]) -> list[str | int | list | tuple]:
-        """Evaluates a list. Used in CLI.\n
+        """Evaluates a list of dates,
+        i.e. converts from string to int, list or tuple.
+        Used in CLI.\n
         :param dates: list of dates to be evaluated
-        :return: evaluated list of dates
+        :return: list of evaluated dates
         """
         for pos, date in enumerate(dates):
-            assert date, f"Date, {repr(date)}, must not be empty"
+            assert date, f"Date, {repr(date)}, mustn't be empty"
             try:
                 # Semi safe eval.
                 date = eval(date, {'__builtins__': None})
@@ -92,7 +94,6 @@ class normalize:
         :param date: date in digits format
         :return: date normalized
         """
-        base26 = '0123456789abcdefghijklmnop'
         date = list(date)
 
         if len(date) < 5:
@@ -102,6 +103,7 @@ class normalize:
             date = date[::-1]
 
         if len(date) > 5:
+            base26 = '0123456789abcdefghijklmnop'
             # Handle for when 4 or more Letters were provided; !1234 BAAB 123 -> [1234, 1, 0, 0, 1, 123]
             date[0] += int(''.join(base26[d] for d in date[1:-4]) + '0', 26)
             del date[1:-4]  # Remove any extra letters.
@@ -353,9 +355,11 @@ class cc_math:
 def cli():
     """Used only as Command Line Tool"""
     if __name__ != '__main__':
-        raise Exception("For CLI use only.")
+        return
+        # raise Exception("For CLI use only.")
 
     import argparse
+
     parser = argparse.ArgumentParser(description="For use with Ivycomb's Cosmic Critters date format.")
     parser.add_argument('--cleanout', help='Makes output clean for easier copying.', action='store_true')
 
@@ -444,6 +448,5 @@ def cli():
 
 if __name__ == '__main__':
     import sys
-
     cli()
     sys.exit(0)

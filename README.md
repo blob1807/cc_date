@@ -37,14 +37,14 @@
 Cosmic Critters (CC) format is: `!YYYY MMM DDD`, `!0-inf A-Z*3 0-999`  
 *It's unknown what CC Dates represent. Year, Month & Day are placeholders*
 * String is in CC format
-* Digits is the letters converted their numbers in base26
+* Digits is the letters converted to their numbers in base26
 * Decimal is the date converted down to Days
 
 <!-- CLI Usage -->
 ## CLI Usage
 
-For dates with Spaces use.<br>
-This will be used throughout this README
+For dates with Spaces use quotation marks.<br>
+*This will be used throughout this README*
 
 **Windows**
 ```
