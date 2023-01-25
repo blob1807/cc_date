@@ -1,4 +1,4 @@
-![Python-Ver-Min] &nbsp; ![Ver]
+![Python-Ver] &nbsp; ![Ver]
 
 # Cosmic Critter Date Format Handler <!-- omit in toc -->
 
@@ -432,5 +432,5 @@ print(date_3.string)
 ```
 
 <!-- MARKDOWN LINKS & IMAGES -->
-[Python-Ver]: https://img.shields.io/badge/python-^3.10.6-blue?style=for-the-badge
+[Python-Ver]: https://img.shields.io/badge/python-^3.10-blue?style=for-the-badge
 [Ver]: https://img.shields.io/badge/version-0.2.1-lightgrey?style=for-the-badge
