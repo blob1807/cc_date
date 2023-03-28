@@ -4,6 +4,7 @@
 
 <!-- TABLE OF CONTENTS -->
 ### Table of Contents
+- [Rust Executable](#rust-version)
 - [Date Terminology](#date-terminology)
 - [Format](#format)
 - [CLI Usage](#cli-usage)
@@ -25,6 +26,10 @@
   - [Calc](#calc)
   - [Convert Lib](#convert-lib)
   - [Examples](#examples)
+
+<!-- EXECUTABLE -->
+### Rust Version
+The executable version can be found in the [releases](https://github.com/blob1807/CC_Date_Rust/releases) over on the [Rust Version](https://github.com/blob1807/CC_Date_Rust).  
 
 <!-- DATE TERMINOLOGY -->
 ## Date Terminology
