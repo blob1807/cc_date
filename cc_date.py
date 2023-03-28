@@ -4,17 +4,17 @@ from string import ascii_uppercase
 from typing import Optional, Generator
 
 __doc__ = """For use with Ivycomb's Cosmic Critters date format."""
-__all__ = ["cc_format", "normalize", "cc_date", "calc", "convert", "cc_math"]
+__all__ = ["cc_format", "cc_date", "cc_math"]
 
 
 # ========== CC Date Format Class ============
 class cc_format:
     """
     valid_string_formats:
-        All valid string formats excepted by cc_date & normalize.\n
+        All valid string formats excepted by cc_date & _normalize.\n
 
     valid_digits_format:
-        Valid digits format excepted by cc_date & normalize.\n
+        Valid digits format excepted by cc_date & _normalize.\n
 
     cc_format:
         Example CC Date in string format.\n
@@ -34,18 +34,17 @@ class cc_format:
     regex_greedy = re.compile(r'(\d*) *([a-z]+) *(\d*(?=\D|\Z))', re.IGNORECASE)
 
 
-class normalize:
+class _normalize:
     """
     Used for normalizing string & digits formats into
     '!YYYY MMM DDD' & [0-inf, 0-25, 0-25, 0-25, 0-999] respectively.\n
-    And for evaluating a list of stings. Used in CLI.
+    And for evaluating a list of stings.
     """
 
     @staticmethod
     def evaluate(dates: list[str | int | list | tuple]) -> list[str | int | list | tuple]:
         """Evaluates a list of dates,
         i.e. converts from string to int, list or tuple.
-        Used in CLI.\n
         :param dates: list of dates to be evaluated
         :return: list of evaluated dates
         """
@@ -72,20 +71,19 @@ class normalize:
     @staticmethod
     def string(date: str) -> str:
         """
-        Used to normalize any date in cc_format.valid_string_formats into '!YYYY MMM DDD'.\n
+        Used to _normalize any date in cc_format.valid_string_formats into '!YYYY MMM DDD'.\n
         :param date: date in string format
         :return: date normalized
         """
         assert date.upper().isupper(), f'Date: {date} must have at least 1 letter.'
         work = list(cc_format.regex_greedy.findall(date)[0])
-        while len(work[1]) < 3:
-            work[1] += 'A'
+        work[1] = 'A'*(3 - len(work[1])) + work[1]
         return f'!{work[0].zfill(1)} {work[1].upper()} {work[2].zfill(3)}'
 
     @staticmethod
     def digits(date: list[int] | tuple[int, ...]) -> list[int, int, int, int, int]:
         """
-        Used to normalize digits formats into [Y, M, M, M, D].\n
+        Used to _normalize digits formats into [Y, M, M, M, D].\n
         Examples: 4 or more Letters were provided;\n
         !1234 BAAB 123 -> [1234, 1, 0, 0, 1, 123] -> [1260, 0, 0, 1, 123]\n
 
@@ -106,13 +104,14 @@ class normalize:
             base26 = '0123456789abcdefghijklmnop'
             # Handle for when 4 or more Letters were provided; !1234 BAAB 123 -> [1234, 1, 0, 0, 1, 123]
             date[0] += int(''.join(base26[d] for d in date[1:-4]) + '0', 26)
+            print(int(''.join(base26[d] for d in date[1:-4]) + '0', 26))
             del date[1:-4]  # Remove any extra letters.
 
         return date
 
 
 # ============== CC Date Class ===============
-@dataclasses.dataclass
+@dataclasses.dataclass()
 class cc_date:
     """Main class for Cosmic Critter Date Format Handler."""
     def __init__(self,
@@ -125,70 +124,101 @@ class cc_date:
         :param radixes: Optional; mixed radix for given date
         :param weights: Optional; weights for given date
         """
-        self.date = date
-        self.radixes = radixes if radixes is list else [0]
-        self.weights = weights if weights is list else [0]
+        self._date = date
+        self.radixes = [] if radixes is Ellipsis else radixes
+        self.weights = [] if weights is Ellipsis else weights
 
-        assert type(self.date) in {list, tuple, str, int}, f'Date, {repr(self.date)}, must be list, tuple, str or int'
-        assert type(self.weights) is list, f'Weights, {repr(self.weights)}, must be a list'
-        assert type(self.radixes) is list, f'Radixes, {repr(self.radixes)}, must be a list'
-        # Add eval check here?
+        assert type(self._date) in {list, tuple, str, int}, \
+            f'Date, {repr(self._date)}, must be list, tuple, str or int'
+        assert type(self.weights) is list, \
+            f'Weights, {repr(self.weights)}, must be a list'
+        assert type(self.radixes) is list, \
+            f'Radixes, {repr(self.radixes)}, must be a list'
+
+        # eval check
+        if type(self._date) is str:
+            self._date = _normalize.evaluate([self._date])[0]
 
         # Normalize & Convert to Digits Date
-        if type(self.date) in {list, tuple}:
-            self.date = normalize.digits(self.date)
+        if type(self._date) in {list, tuple}:
+            self._date = _normalize.digits(self._date)
 
-        elif type(self.date) is str:
-            self.date: str
-            if not self.date.upper().isupper():
-                self.date = f'!000 AAA {self.date.zfill(3)}'
+        elif type(self._date) is str:
+            self._date: str
+            if not self._date.upper().isupper():
+                self._date = f'!000 AAA {self._date.zfill(3)}'
 
-            self.date = normalize.string(self.date)
-            self.date = convert.string_to_digits(self.date)
+            self._date = _normalize.string(self._date)
+            self._date = _convert.string_to_digits(self._date)
 
         else:
-            self.date: int
-            self.date = convert.decimal_to_digits(self.date)
+            self._date: int
+            self._date = _convert.decimal_to_digits(self._date)
 
         # Use Digits Date to calculate Radix & Weights
         if not self.radixes:
-            self.radixes = calc.radixes(self.date)
+            self.radixes = _calc.radixes(self._date)
         if not self.weights:
-            self.weights = calc.weights(self.radixes)
+            self.weights = _calc.weights(self.radixes)
 
         # Make date Decimal Date
-        self.date = convert.digits_to_decimal(self.date, self.weights)
+        self._date = _convert.digits_to_decimal(self._date, self.weights)
 
     @property
     def decimal(self) -> int:
         """
         :return: CC Date in Decimal format
         """
-        assert type(self.date) is int, \
+        assert type(self._date) is int, \
             "cc_date.date shouldn't be modified after initialization."
-        return self.date
+        return self._date
 
     @property
     def digits(self) -> tuple[int, ...]:
         """
         :return: CC Date in Digits format
         """
-        assert type(self.date) is int, \
+        assert type(self._date) is int, \
             "cc_date.date shouldn't be modified after initialization."
-        return tuple(convert.decimal_to_digits(self.date))
+        return tuple(_convert.decimal_to_digits(self._date))
 
     @property
     def string(self) -> str:
         """
         :return: CC Date in String format
         """
-        assert type(self.date) is int, \
+        assert type(self._date) is int, \
             "cc_date.date shouldn't be modified after initialization."
-        return convert.decimal_to_string(self.date)
+        return _convert.decimal_to_string(self._date)
+
+    def __repr__(self):
+        return f'cc_date(date={self.decimal}, radixes={self.radixes}, weights={self.weights})'
+
+    def __str__(self):
+        return self.string
+
+    def __int__(self):
+        return self.decimal
+
+    def __float__(self):
+        return float(self.decimal)
+
+    def __add__(self, other):
+        return cc_date(self.decimal + int(other))
+
+    def __radd__(self, other):
+        return cc_date(int(other) + self.decimal)
+
+    def __sub__(self, other):
+        return cc_date(self.decimal - int(other))
+
+    def __rsub__(self, other):
+        return cc_date(int(other) - self.decimal)
+
 
 
 # ============ Calculation Class ============
-class calc:
+class _calc:
     """Calculate mixed radixes & weights of a date. """
 
     @staticmethod
@@ -209,23 +239,28 @@ class calc:
 
 
 # ============= Conversion Class =============
-class convert:
+class _convert:
     """Functions for converting between String, Digits & Decimal date formats."""
 
     @staticmethod
     def digits_to_decimal(date: list[int], weights: Optional[list[int]] = ...) -> int:
         """
         Convert digits format to decimal format.\n
-        Date NEEDS to be normalized with normalize.digits() before passing to this func.\n
+        Date NEEDS to be normalized with _normalize.digits() before passing to this func.\n
         :param date: CC Date in digits format
-        :param weights: Optional; weights of date from calc.weights()
+        :param weights: Optional; weights of date from _calc.weights()
         :return: CC Date in decimal format
         """
         # Mixed to Base10
         if weights is Ellipsis or not weights:
-            weights = calc.weights(calc.radixes(date))
+            weights = _calc.weights(_calc.radixes(date))
         # Multiple each date by its weight & sum them up
-        return sum(map(lambda weight, n: weight * n, weights, date))
+        work = []
+        for w, n in zip(weights, date):
+            work.append(w*n)
+        work = sum(work)
+        return work
+        # return sum(map(lambda weight, n: weight * n, weights, date))
 
     @staticmethod
     def decimal_to_digits(date: int) -> list[int, int, int, int, int]:
@@ -237,7 +272,7 @@ class convert:
         # Base10 to Mixed
         work = []
         for r in (26, 26, 26, 1000)[::-1]:
-            # Loop through radixes. Excluding 5th radix.
+            # Loop through radixes. Excluding 1st radix. Which is already removed here.
             work.append(date % r)
             date //= r
         # Append what's left. Same as if 5th radix is used.
@@ -248,7 +283,7 @@ class convert:
     def digits_to_string(date: list[int]) -> str:
         """
         Converts digits format to string format.\n
-        Date NEEDS to be normalized with normalize.digits() before passing to this func.\n
+        Date NEEDS to be normalized with _normalize.digits() before passing to this func.\n
         :param date: CC Date in digits format
         :return: CC Date in string format
         """
@@ -258,7 +293,7 @@ class convert:
     def string_to_digits(date: str) -> list[int, int, int, int, int]:
         """
         Converts string format to digits format.\n
-        Date NEEDS to be normalized with normalize.string() before passing to this func.\n
+        Date NEEDS to be normalized with _normalize.string() before passing to this func.\n
         :param date: CC Date in string format
         :return: CC Date in digits format
         """
@@ -269,7 +304,7 @@ class convert:
             work.append(ascii_uppercase.index(letter.upper()))
 
         work.append(int(date[2]))
-        return normalize.digits(work)
+        return _normalize.digits(work)
 
     @staticmethod
     def decimal_to_string(date: int) -> str:
@@ -278,24 +313,24 @@ class convert:
         :param date: CC Date in decimal format
         :return: CC Date in string format
         """
-        return convert.digits_to_string(convert.decimal_to_digits(date))
+        return _convert.digits_to_string(_convert.decimal_to_digits(date))
 
     @staticmethod
     def string_to_decimal(date: str, weights: Optional[list[int]] = ...) -> int:
         """
         Converts string format to decimal format.\n
-        Date NEEDS to be normalized with normalize.string() before passing to this func.\n
+        Date NEEDS to be normalized with _normalize.string() before passing to this func.\n
         :param date: CC Date in string format
-        :param weights: Optional; weights of date from calc.weights()
+        :param weights: Optional; weights of date from _calc.weights()
         :return: CC Date in decimal format
         """
-        return convert.digits_to_decimal(convert.string_to_digits(date), weights)
+        return _convert.digits_to_decimal(_convert.string_to_digits(date), weights)
 
 
 # ================ Math Class ================
 class cc_math:
     """
-    Math Functions for easily Adding, Subtracting, Multiplying & Floor Dividing CC Dates.\n
+    Math Functions for easily Adding, Subtracting, Multiplying & Floor Dividing large amounts of CC Dates.\n
     All functions take a list of cc_date & returns a new cc_date.
     """
 
@@ -352,7 +387,7 @@ class cc_math:
         return cc_date(ans)
 
 
-def cli():
+def _cli():
     """Used only as Command Line Tool"""
     if __name__ != '__main__':
         return
@@ -371,11 +406,11 @@ def cli():
 
     operation.add_argument('-f', '--valid-formats', help='Prints all valid input formats', action='store_true')
 
-    operation.add_argument('-c', '--convert', choices=['string', 'digits', 'decimal'],
+    operation.add_argument('-c', '--_convert', choices=['string', 'digits', 'decimal'],
                            help='Convert from String, Digits & Decimal Dates to String, Digits or Decimal Dates')
     operation.add_argument('-C', '--calculate', choices=['radix', 'weights'],
                            help='Calculates the Radixes or Weights of given Date\\s')
-    operation.add_argument('-n', '--normalize', choices=['string', 'digits'],
+    operation.add_argument('-n', '--_normalize', choices=['string', 'digits'],
                            help='Normalize strings & arrays to expected formats. Script does this automatically.')
 
     parser.add_argument('dates', help='CC Dates', nargs='+')
@@ -386,7 +421,7 @@ def cli():
     # args = parser.parse_args(inp)
     args = parser.parse_args()
 
-    args.dates = normalize.evaluate(args.dates)
+    args.dates = _normalize.evaluate(args.dates)
 
     if args.add:
         values = cc_math.add([cc_date(date) for date in args.dates]).string
@@ -427,11 +462,11 @@ def cli():
     elif args.normalize:
         if args.normalize == 'string':
             print("String Dates Normalized:")
-            values = (normalize.string(date) for date in args.dates)
+            values = (_normalize.string(date) for date in args.dates)
 
         else:
             print("Digit Dates Normalized:")
-            values = (normalize.digits(date) for date in args.dates)
+            values = (_normalize.digits(date) for date in args.dates)
 
     else:
         raise Exception("Do look at me. Argparse must of decide to go poof.")
@@ -448,5 +483,6 @@ def cli():
 
 if __name__ == '__main__':
     import sys
-    cli()
+
+    _cli()
     sys.exit(0)

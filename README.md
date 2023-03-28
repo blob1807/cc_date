@@ -4,6 +4,7 @@
 
 <!-- TABLE OF CONTENTS -->
 ### Table of Contents
+- [Rust Executable](#rust-version)
 - [Date Terminology](#date-terminology)
 - [Format](#format)
 - [CLI Usage](#cli-usage)
@@ -25,6 +26,11 @@
   - [Calc](#calc)
   - [Convert Lib](#convert-lib)
   - [Examples](#examples)
+
+<!-- EXECUTABLE -->
+### Rust Version
+The executable version can be found in the [releases](https://github.com/blob1807/CC_Date_Rust/releases) over on the [Rust Version](https://github.com/blob1807/CC_Date_Rust).  
+
 
 <!-- DATE TERMINOLOGY -->
 ## Date Terminology
@@ -326,6 +332,9 @@ Digits:
 `cc_date(date: list[int] | tuple[int, ...] | str | int,
          radixes: list[int]
          weights: list[int])`  
+Main type class for this library.  
+Has Support for `+` & `-` and converting to int, float & string.  
+
 `date`: String, Digits or Decimal Date.  
 `radixes`: Array of Mixed Radix; Optional.  
 `weights`: Array of Weights; Optional.  
@@ -336,7 +345,10 @@ Properties:
 `.string` returns date as String.  
 
 ### CC Math
-`cc_math`
+`cc_math`  
+Math Functions for easily Adding, Subtracting, Multiplying & Floor Dividing 
+large amounts of CC Dates.  
+All functions take a list of `cc_date` & returns a new `cc_date`.
 
 Functions:  
 `.add(dates: list[cc_date])` adds cc dates, returns cc date  
@@ -346,7 +358,8 @@ Functions:
 
 
 ### CC Format
-`cc_format` Intended for internal use.
+`cc_format`  
+Holds valid formats & regexes.
 
 Variables:  
 `.valid_string_formats` all valid string formats.  
@@ -357,15 +370,19 @@ Variables:
 
 
 ### Normalize Lib
-`normalize` Intended for internal use. Used to normalize.
+`_normalize` Intended for internal use.  
+Used for normalizing string & digits formats into `!YYYY MMM DDD` & `[0-inf, 0-25, 0-25, 0-25, 0-999]` respectively.  
+And for evaluating a list of stings.  
 
 Functions:  
 `.string(date: str)` used to normalize strings.  
-`.digits(date: list[int] | tuple[int, ...])` used to normalize lists.
+`.digits(date: list[int] | tuple[int, ...])` used to normalize lists.  
+`.evaluate(dates: list[str | int | list | tuple])` used to semi-safely evaluate.  
 
 
 ### Calc
-`calc` Intended for internal use.
+`_calc` Intended for internal use.  
+Calculate mixed radixes & weights of a date.  
 
 Functions:  
 `.radixes(date: list[int])` returns list of the mixed radix of given date.  
@@ -373,7 +390,8 @@ Functions:
 
 
 ### Convert Lib
-`convert` Intended for internal use.
+`_convert` Intended for internal use.  
+Functions for converting between String, Digits & Decimal date formats.  
 
 Functions:  
 `.digits_to_decimal(date: list[int], weights: list[int] = ...)`
@@ -396,7 +414,9 @@ Get String in Decimal date
 from cc_date import cc_date
 
 date = cc_date("!1234 ABC 123")
-print(cc_date.decimal)
+print(date.decimal)
+# Or
+print(int(date))
 ```
 
 ```
@@ -408,7 +428,11 @@ Convert Decimal to String date
 ```python
 from cc_date import cc_date
 date = cc_date(21688812123)
-print(cc_date.string)
+print(date.string)
+# Or
+print(str(date))
+# Or
+print(date)
 ```
 
 ```
@@ -425,6 +449,11 @@ date_2 = cc_date("!4321 CBA 321")
 date_3 = cc_math.add([date_1, date_2])
 
 print(date_3.string)
+# or
+print(date_1 + date_2)
+# or
+print(sum([date_1, date_2]))
+
 ```
 
 ```
@@ -433,4 +462,4 @@ print(date_3.string)
 
 <!-- MARKDOWN LINKS & IMAGES -->
 [Python-Ver]: https://img.shields.io/badge/python-^3.10-blue?style=for-the-badge
-[Ver]: https://img.shields.io/badge/version-0.2.1-lightgrey?style=for-the-badge
+[Ver]: https://img.shields.io/badge/version-0.3.0-lightgrey?style=for-the-badge
