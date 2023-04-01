@@ -4,7 +4,7 @@
 
 <!-- TABLE OF CONTENTS -->
 ### Table of Contents
-- [Rust Executable](#rust-version)
+- [Executable](#rust-version)
 - [Date Terminology](#date-terminology)
 - [Format](#format)
 - [CLI Usage](#cli-usage)
