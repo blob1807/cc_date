@@ -102,9 +102,9 @@ class _normalize:
 
         if len(date) > 5:
             base26 = '0123456789abcdefghijklmnop'
-            # Handle for when 4 or more Letters were provided; !1234 BAAB 123 -> [1234, 1, 0, 0, 1, 123]
+            # Handle for when 4 or more Letters were provided;
+            # !1234 BAAB 123 -> [1234, 1, 0, 0, 1, 123] -> [1260, 1, 0, 0, 1, 123] -> [1260, 0, 0, 1, 123]
             date[0] += int(''.join(base26[d] for d in date[1:-4]) + '0', 26)
-            print(int(''.join(base26[d] for d in date[1:-4]) + '0', 26))
             del date[1:-4]  # Remove any extra letters.
 
         return date
@@ -214,7 +214,6 @@ class cc_date:
 
     def __rsub__(self, other):
         return cc_date(int(other) - self.decimal)
-
 
 
 # ============ Calculation Class ============
